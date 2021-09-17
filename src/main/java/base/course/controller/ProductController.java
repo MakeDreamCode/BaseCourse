@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +40,16 @@ public class ProductController {
         return productDtoMapper.parse(productService.save(productDtoMapper.toModel(product)));
     }
 
-    @DeleteMapping
+    @PutMapping("/{id}")
+    ProductResponseDto update(@PathVariable Long id,
+                              @RequestBody ProductRequestDto requestDto) {
+        Product product = productDtoMapper.toModel(requestDto);
+        product.setId(id);
+        Product updatedProduct = productService.update(product);
+        return productDtoMapper.parse(updatedProduct);
+    }
+
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         productService.delete(id);
     }
